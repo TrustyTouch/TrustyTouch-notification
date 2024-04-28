@@ -1,17 +1,11 @@
 version: '3.8'
 services:
-  notification-service:
+  web:
     build: .
     ports:
       - "5001:5000"
-    environment:
-      - FLASK_ENV=development
-      - FLASK_APP=app
     volumes:
       - .:/app
-    depends_on:
-      - redis
-  redis:
-    image: redis:6.0
-    ports:
-      - "6379:6379"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
