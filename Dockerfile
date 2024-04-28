@@ -1,6 +1,9 @@
 # Utiliser une image de base Python
 FROM python:3.9-slim
 
+# Installer les dépendances pour psycopg2
+RUN apt-get update && apt-get install -y libpq-dev gcc
+
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
