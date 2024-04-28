@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from .services import send_notification
+from .services import send_notification, get_unread_notifications
 
 notification_bp = Blueprint('notification_bp', __name__)
 
@@ -13,3 +13,11 @@ def notify():
         return jsonify({"status": "success", "message": "Notification sent"}), 200
     else:
         return jsonify({"status": "failed", "message": "Notification failed"}), 400
+    
+@notification_bp.route('/notifications/<int:user_id>', methods=['GET'])
+def fetch_unread_notifications(user_id):
+    notifications = get_unread_notifications(user_id)
+    if notifications:
+        return jsonify({"status": "success", "notifications": notifications}), 200
+    else:
+        return jsonify({"status": "failed", "message": "No unread notifications"}), 404
