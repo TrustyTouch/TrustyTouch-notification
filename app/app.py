@@ -1,11 +1,14 @@
-from . import create_app
+from flask import Flask
+
+def create_app():
+    app = Flask(__name__)
+
+    from .routes import notification_bp
+    app.register_blueprint(notification_bp)
+
+    return app
 
 app = create_app()
 
-app.config['DB_NAME'] = 'postgres'
-app.config['DB_USER'] = 'postgres'
-app.config['DB_PASSWORD'] = 'postgres'
-app.config['DB_HOST'] = 'localhost'
-
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)

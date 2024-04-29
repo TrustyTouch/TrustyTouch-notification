@@ -3,15 +3,28 @@ from flask import current_app
 
 def get_db_connection():
     return psycopg2.connect(
-        dbname=current_app.config['DB_NAME'],
-        user=current_app.config['DB_USER'],
-        password=current_app.config['DB_PASSWORD'],
-        host=current_app.config['DB_HOST']
+        dbname='postgres',
+        user='postgres',
+        password='postgres',
+        host='host.docker.internal',
+        port='5434'
     )
 
 def send_notification(user_id, message):
-    print(f"Sending notification to user {user_id}: {message}")
-    return True
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute("INSERT INTO notifications (user_id, message, read_status) VALUES (%s, %s, FALSE)", (user_id, message))
+        conn.commit() 
+        print(f"Sending notification to user {user_id}: {message}")
+        return True
+    except Exception as e:
+        print(f"Failed to send notification: {e}")
+        conn.rollback()
+        return False
+    finally:
+        cur.close()
+        conn.close()
 
 def get_unread_notifications(user_id):
     conn = get_db_connection()
